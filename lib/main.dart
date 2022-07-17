@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:netflix_analysis/actors_table_page.dart';
+import 'package:netflix_analysis/analysis_page.dart';
 import 'package:netflix_analysis/directors_table_page.dart';
-import 'package:netflix_analysis/movies_table_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,7 +35,7 @@ class _RootPageState extends State<RootPage> {
   List<Widget> pages = const [
     ActorsTablePage(),
     DirectorsTablePage(),
-    MoviesTablePage()
+    AnalysisPage()
   ];
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class _RootPageState extends State<RootPage> {
         destinations: const [
           NavigationDestination(icon: Icon(Icons.recent_actors), label: 'Actors'),
           NavigationDestination(icon: Icon(Icons.account_box), label: 'Directors'),
-          NavigationDestination(icon: Icon(Icons.local_movies), label: 'Movies'),
+          NavigationDestination(icon: Icon(Icons.auto_graph), label: 'Analysis'),
         ],
         onDestinationSelected: (int index) {
           setState(() {
