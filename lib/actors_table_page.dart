@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:netflix_analysis/actors_individual_page.dart';
+import 'package:netflix_analysis/individual_page.dart';
 import 'package:netflix_analysis/services/service.dart';
 
 class ActorsTablePage extends StatelessWidget {
@@ -9,14 +9,19 @@ class ActorsTablePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Actors Analysis')
+        title: const ListTile(
+          title:
+            Text("Top 10 Actors", style: TextStyle(color:Colors.white)),
+          subtitle:
+            Text("Ordered by Average TMDB Popularity", style: TextStyle(color:Colors.white)),
+        )
       ),
       body: 
       FutureBuilder(
         future: HttpService.getAllActorsData(),
         builder:(context, snapshot) {
           if (!snapshot.hasData) {
-            return const Scaffold();
+            return const Center(child: Text("Loading Data..."),);
           }
 
           if (snapshot.hasData) {
@@ -28,8 +33,8 @@ class ActorsTablePage extends StatelessWidget {
                 2: FlexColumnWidth(1),
                 3: FlexColumnWidth(1),
                 4: FlexColumnWidth(1),
+                5: FlexColumnWidth(1),
                 6: FlexColumnWidth(1),
-                7: FlexColumnWidth(1),
               },
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               children: 
@@ -52,18 +57,18 @@ class ActorsTablePage extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(builder: ((context) {
-                              return const ActorsIndividualPage();
+                              return IndividualPage(personId: item["person_id"], name: item['name'], type: "ACTOR",);
                             }))
                           );
                         },
-                        child: Text(item["name"] == null ? '-' : item["name"].toString()),
+                        child: Text(item["name"] == null ? '-' : item["name"].toString(), textAlign: TextAlign.center),
                       ),
-                      Text(item["count"] == null ? '-' : item["count"].toString()),
-                      Text('${item["min"]} - ${item["max"]}'),
-                      Text(item["avg_imdb_score"] == null ? '-' : item["avg_imdb_score"].toString()),
-                      Text(item["total_imdb_votes"] == null ? '-' : item["total_imdb_votes"].toString()),
-                      Text(item["avg_tmdb_popularity"] == null ? '-' : item["avg_tmdb_popularity"].toString()),
-                      Text(item["avg_tmdb_score"] == null ? '-' : item["avg_tmdb_score"].toString()),
+                      Text(item["count"] == null ? '-' : item["count"].toString(), textAlign: TextAlign.center),
+                      Text('${item["min"]} - ${item["max"]}', textAlign: TextAlign.center),
+                      Text(item["avg_imdb_score"] == null ? '-' : (double.parse(item["avg_imdb_score"])).toStringAsFixed(3), textAlign: TextAlign.center),
+                      Text(item["total_imdb_votes"] == null ? '-' : item["total_imdb_votes"].toString(), textAlign: TextAlign.center),
+                      Text(item["avg_tmdb_popularity"] == null ? '-' : (double.parse(item["avg_tmdb_popularity"])).toStringAsFixed(3), textAlign: TextAlign.center),
+                      Text(item["avg_tmdb_score"] == null ? '-' : (double.parse(item["avg_tmdb_score"])).toStringAsFixed(3), textAlign: TextAlign.center),
                     ],
                   )
                 )
