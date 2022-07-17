@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:netflix_analysis/charts/numbers_chart.dart';
 import 'package:netflix_analysis/charts/text_numbers_chart.dart';
-import 'package:netflix_analysis/model/analysis_series.dart';
-import 'package:netflix_analysis/model/genres_popularity.dart';
 import 'package:netflix_analysis/services/service.dart';
 
-class AnalysisPage extends StatelessWidget {
+class AnalysisPage extends ConsumerWidget {
   const AnalysisPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
+    final imdbScoreData = ref.watch(analysisProvider("imdb_score"));
+    final tmdbScoreData = ref.watch(analysisProvider("tmdb_score"));
+    final runtimeData = ref.watch(analysisProvider("runtime"));
+    final genresData = ref.watch(genresProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Analysis of Shows/Movies on Netflix"),
@@ -17,74 +20,54 @@ class AnalysisPage extends StatelessWidget {
       body: 
       ListView(
         children: [
-          FutureBuilder(
-            future: HttpService.getAnalysisData("imdb_score"),
-            builder:(context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(child: Text("Loading Data..."),);
-              }
-              if (snapshot.hasData) {
-                return Center(
-                  child: NumbersChart(
-                    data: snapshot.data as List<AnalysisSeries>,
-                    title: "Average IMDB Score Across Years"
-                  ),
-                );
-              }
-              return const Scaffold();
-            }
+          imdbScoreData.when(
+            data: (imdbScoreData) {
+              return Center(
+                child: NumbersChart(
+                  data: imdbScoreData,
+                  title: "Average IMDB Score Across Years"
+                ),
+              );
+            },
+            error: (err, s) => Text(err.toString()),
+            loading: () => const Center(child: Text("Loading Data..."))
           ),
-          FutureBuilder(
-            future: HttpService.getAnalysisData("tmdb_score"),
-            builder:(context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(child: Text("Loading Data..."),);
-              }
-              if (snapshot.hasData) {
-                return Center(
-                  child: NumbersChart(
-                    data: snapshot.data as List<AnalysisSeries>,
-                    title: "Average TMDB Score Across Years"
-                  ),
-                );
-              }
-              return const Scaffold();
-            }
+          tmdbScoreData.when(
+            data: (tmdbScoreData) {
+              return Center(
+                child: NumbersChart(
+                  data: tmdbScoreData,
+                  title: "Average TMDB Score Across Years"
+                ),
+              );
+            },
+            error: (err, s) => Text(err.toString()),
+            loading: () => const Center(child: Text("Loading Data..."))
           ),
-          FutureBuilder(
-            future: HttpService.getAnalysisData("runtime"),
-            builder:(context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(child: Text("Loading Data..."),);
-              }
-              if (snapshot.hasData) {
-                return Center(
-                  child: NumbersChart(
-                    data: snapshot.data as List<AnalysisSeries>,
-                    title: "Total Runtime of Shows Released Across Years",
-                  ),
-                );
-              }
-              return const Scaffold();
-            }
+          runtimeData.when(
+            data: (runtimeData) {
+              return Center(
+                child: NumbersChart(
+                  data: runtimeData,
+                  title: "Total Runtime of Shows Released Across Years",
+                ),
+              );
+            },
+            error: (err, s) => Text(err.toString()),
+            loading: () => const Center(child: Text("Loading Data..."))
           ),
-          FutureBuilder(
-            future: HttpService.getGenreData(),
-            builder:(context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(child: Text("Loading Data..."),);
-              }
-              if (snapshot.hasData) {
-                return Center(
-                  child: TextNumbersChart(
-                    data: snapshot.data as List<GenresPopularity>,
-                    title: "Genres Runtime"
-                  ),
-                );
-              }
-              return const Scaffold();
-            }
-          )
+          genresData.when(
+            data: (genresData) {
+              return Center(
+                child: TextNumbersChart(
+                  data: genresData,
+                  title: "Genres Runtime"
+                ),
+              );
+            },
+            error: (err, s) => Text(err.toString()),
+            loading: () => const Center(child: Text("Loading Data..."))
+          ),
         ],
       )
     );

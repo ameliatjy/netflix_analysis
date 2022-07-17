@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:netflix_analysis/actors_table_page.dart';
 import 'package:netflix_analysis/analysis_page.dart';
 import 'package:netflix_analysis/directors_table_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(
+    child: MyApp()
+  ));
 }
 
 class MyApp extends StatelessWidget {
