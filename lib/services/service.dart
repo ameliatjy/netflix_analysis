@@ -6,7 +6,7 @@ import 'package:netflix_analysis/model/genres_popularity.dart';
 import 'package:tuple/tuple.dart';
 
 class HttpService {
-  static const String uri = "http://localhost:8000";
+  static const String uri = "https://netflixanalysis.azurewebsites.net";
 
   Future<dynamic> getAllActorsData() async {
     Response res = await get(Uri.parse('$uri/actors_analysis'));
