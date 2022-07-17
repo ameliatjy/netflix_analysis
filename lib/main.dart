@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:netflix_analysis/actors_table_page.dart';
-import 'package:netflix_analysis/analysis_page.dart';
-import 'package:netflix_analysis/directors_table_page.dart';
+import 'package:netflix_analysis/screens/actors_table_page.dart';
+import 'package:netflix_analysis/screens/analysis_page.dart';
+import 'package:netflix_analysis/screens/directors_table_page.dart';
 
 void main() {
   runApp(const ProviderScope(
